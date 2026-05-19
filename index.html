@@ -751,6 +751,199 @@
     .reveal { opacity: 1 !important; animation: none !important; }
   }
 
+
+  /* ===== BOTÓN WHATSAPP CYBERPUNK ===== */
+  @keyframes wa-pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+      box-shadow: 0 0 0 0 #ff00ff66, 0 0 0 0 #00ffff66;
+    }
+    70% {
+      transform: scale(1.08);
+      opacity: 0;
+      box-shadow: 0 0 0 20px transparent, 0 0 0 30px transparent;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+  @keyframes wa-glitch {
+    0%, 100% { transform: translate(0); }
+    93% { transform: translate(-1px, 1px); }
+    96% { transform: translate(1px, -1px); }
+  }
+
+  /* CTA principal — sección dedicada al final */
+  .cta-block {
+    margin-top: 56px;
+    text-align: center;
+    padding: 40px 24px;
+    border: 1px solid #ff00ff44;
+    background:
+      linear-gradient(135deg, rgba(255, 0, 255, 0.04), rgba(0, 255, 255, 0.04)),
+      rgba(15, 0, 30, 0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(255, 0, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+  .cta-block .cta-prompt {
+    position: relative;
+    color: #00ffff;
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+    text-shadow: 0 0 6px #00ffff;
+    text-transform: uppercase;
+  }
+  .cta-block .cta-headline {
+    position: relative;
+    color: #ff00ff;
+    font-size: clamp(22px, 4vw, 32px);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    text-shadow: 0 0 10px #ff00ff, 0 0 24px #ff00ff66;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+
+  .wa-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, #1a0033, #000022);
+    border: 2px solid #ff00ff;
+    color: #00ffff;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: 0 0 8px #00ffff;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.25s ease;
+    z-index: 1;
+  }
+  .wa-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #ff00ff22, transparent, #00ffff22);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+  }
+  .wa-btn::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 2px solid #ff00ff;
+    opacity: 0;
+    animation: wa-pulse-ring 2.5s ease-out infinite;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .wa-btn:hover {
+    color: #ff00ff;
+    text-shadow: 0 0 8px #ff00ff;
+    border-color: #00ffff;
+    box-shadow:
+      0 0 20px #ff00ff66,
+      0 0 40px #ff00ff33,
+      inset 0 0 20px #00ffff22;
+    transform: translateY(-2px);
+    animation: wa-glitch 0.4s infinite;
+  }
+  .wa-btn:hover::before { opacity: 1; }
+  .wa-btn .wa-icon {
+    width: 22px;
+    height: 22px;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  .wa-btn .arrow {
+    color: #ff00ff;
+    text-shadow: 0 0 6px #ff00ff;
+    margin-left: 4px;
+    transition: transform 0.2s;
+  }
+  .wa-btn:hover .arrow { transform: translateX(4px); color: #00ffff; }
+
+  .cta-block .cta-phone {
+    position: relative;
+    margin-top: 16px;
+    color: #ff00ff99;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 4px #ff00ff66;
+  }
+
+  /* Floating button — esquina inferior derecha */
+  .wa-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a0033, #000022);
+    border: 2px solid #ff00ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00ffff;
+    text-decoration: none;
+    z-index: 90;
+    box-shadow:
+      0 0 16px #ff00ff66,
+      0 0 32px #ff00ff33,
+      inset 0 0 12px #00ffff22;
+    transition: all 0.25s ease;
+    overflow: hidden;
+  }
+  .wa-float::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid #00ffff66;
+    animation: wa-pulse-ring 2.5s ease-out infinite;
+    pointer-events: none;
+  }
+  .wa-float:hover {
+    transform: scale(1.08);
+    border-color: #00ffff;
+    color: #ff00ff;
+    box-shadow:
+      0 0 24px #00ffff88,
+      0 0 48px #ff00ff66;
+  }
+  .wa-float svg {
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+
+  @media (max-width: 600px) {
+    .wa-float { width: 52px; height: 52px; bottom: 16px; right: 16px; }
+    .wa-float svg { width: 24px; height: 24px; }
+    .cta-block { padding: 32px 16px; }
+    .wa-btn { padding: 14px 22px; font-size: 12px; letter-spacing: 2px; }
+  }
+
 </style>
 </head>
 <body>
@@ -793,6 +986,19 @@
     <h2 class="section-title">SOURS</h2>
     <div class="grid" id="grid-sours"></div>
   </section>
+  <!-- CTA WhatsApp -->
+  <section class="cta-block">
+    <div class="cta-prompt">// READY_TO_ORDER?</div>
+    <div class="cta-headline">PEDÍ DIRECTO POR WHATSAPP</div>
+    <a class="wa-btn" href="https://wa.me/56977235984?text=Hola%20The%20Drink%2C%20vengo%20de%20la%20carta%20%E2%80%94%20me%20interesa%3A%20" target="_blank" rel="noopener">
+      <svg class="wa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      <span>INICIAR PEDIDO</span>
+      <span class="arrow">▶</span>
+    </a>
+    <div class="cta-phone">+56 9 7723 5984</div>
+  </section>
+
+
 
   <footer class="footer">
     <span class="blink">▣</span> THE_DRINK © 2026 // ALL TRAGOS RESERVED <span class="blink">▣</span>
@@ -927,5 +1133,10 @@
   setupReveal();
 </script>
 
+
+<!-- Floating WhatsApp -->
+<a class="wa-float" href="https://wa.me/56977235984?text=Hola%20The%20Drink%2C%20vengo%20de%20la%20carta%20%E2%80%94%20me%20interesa%3A%20" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+</a>
 </body>
 </html>
