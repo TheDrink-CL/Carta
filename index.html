@@ -1150,6 +1150,37 @@
     margin: 4px 0 2px;
     opacity: 0.78;
   }
+  /* ─── SUB-DIVISOR DENTRO DE UNA SECCIÓN (// SABORES) ────── */
+  .sub-divider {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 12px 0 4px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .sub-divider .sub-tag {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #ff00ff;
+    text-shadow: 0 0 8px rgba(255,0,255,0.45);
+    white-space: nowrap;
+    opacity: 0.88;
+  }
+  .sub-divider .sub-tag::before { content: '// '; color: #ff00ff99; }
+  .sub-divider .sub-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255,0,255,0.45) 0%, rgba(255,0,255,0.08) 60%, transparent 100%);
+  }
+  @media (max-width: 720px) {
+    .sub-divider { margin: 8px 0 2px; gap: 10px; }
+    .sub-divider .sub-tag { font-size: 9.5px; letter-spacing: 0.22em; }
+  }
+
 
 
 
@@ -1157,12 +1188,6 @@
 </style>
 </head>
 <body>
-
-<div class="controls">
-  <button id="exportBtn" title="Descargar backup de las fotos">EXPORT</button>
-  <button id="importBtn" title="Restaurar backup de fotos">IMPORT</button>
-  <input type="file" id="importFile" accept="application/json" style="display:none;">
-</div>
 
 <div class="wrap">
   <header class="header">
@@ -1241,29 +1266,11 @@
 
 <footer class="footer">
     <span class="blink">▣</span> THE_DRINK © 2026 // ALL TRAGOS RESERVED <span class="blink">▣</span>
-    <div style="margin-top:10px; color:#00ffff66; font-size:10px;">
-      // Toca cualquier foto para subir o reemplazar la imagen del trago
-    </div>
+
   </footer>
 </div>
 
-<!-- MODAL -->
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <h2>// UPLOAD_IMAGE</h2>
-    <div class="target" id="modal-target"></div>
-    <label class="filebtn" for="fileInput">
-      ▶ SELECCIONAR ARCHIVO<br>
-      <span style="font-size:10px; opacity:0.6;">JPG / PNG / WEBP</span>
-    </label>
-    <input type="file" id="fileInput" accept="image/*">
-    <div class="actions">
-      <button id="cancelBtn">CANCELAR</button>
-    </div>
-  </div>
 </div>
-
-<div class="toast" id="toast"></div>
 
 <script>
   // ===== DATA =====
@@ -1294,7 +1301,7 @@
     { id: 32, nombre: "Violetto Tonic 0.0",    precio: 7000,  envase: "1lt",   incluye: "", cat: "cero",    estilo: "estilo gin tonic" },
   ];
 
-  const DESCRIPTORS = {1: "Ron · coco · piña · curaçao", 2: "Ron · frambuesa", 3: "Ron · frutilla", 4: "Ron · mango", 5: "Ron · maracuyá", 7: "Ron · crema de coco · frutilla", 8: "Ron · crema de coco · mango", 9: "Ron · menta fresca", 10: "Ron · menta · coco · curaçao", 11: "Ron · menta · frambuesa", 12: "Ron · menta · frambuesa · crema de coco", 13: "Ron · menta · frutilla", 14: "Ron · menta · mango", 15: "Ron · menta · maracuyá", 16: "Ron · menta · piña", 17: "Ron · crema de coco · piña", 20: "Gin · maracuyá · Red Bull Yellow", 21: "Gin · frambuesa · Red Bull Blue", 23: "Pisco · limón", 24: "Pisco · mango · limón", 25: "Jäger · menta · limón", 30: "Menta · limón · jengibre · 0.0", 31: "Frutilla · frambuesa · coco · 0.0", 32: "Romero · enebro · tónica · 0.0"};
+  const DESCRIPTORS = {1: "Ron · coco · piña · curaçao", 2: "Ron · frambuesa", 3: "Ron · frutilla", 4: "Ron · mango", 5: "Ron · maracuyá", 7: "Ron · crema de coco · frutilla", 8: "Ron · crema de coco · mango", 9: "Ron · menta fresca", 10: "Ron · menta · coco · curaçao", 11: "Ron · menta · frambuesa", 12: "Ron · menta · frambuesa · crema de coco", 13: "Ron · menta · frutilla", 14: "Ron · menta · mango", 15: "Ron · menta · maracuyá", 16: "Ron · menta · piña", 17: "Ron · crema de coco · piña", 20: "Gin · maracuyá · Red Bull Yellow", 21: "Gin · frambuesa · Red Bull Blue", 23: "Pisco · limón", 24: "Pisco · mango · limón", 25: "Jäger · menta · limón · naranja", 30: "Menta · limón · jengibre · 0.0", 31: "Frutilla · frambuesa · coco · 0.0", 32: "Romero · enebro · tónica · 0.0"};
   const STORAGE_KEY = "the_drink_photos_v1";
 
   function loadPhotos() {
@@ -1360,137 +1367,20 @@
     const cero = RECETAS.filter(r => r.cat === "cero");
 
     document.getElementById("hero-premium").innerHTML = premium.map(r => cardHTML(r, true)).join("");
-    document.getElementById("grid-mojitos").innerHTML = mojitos.map(r => cardHTML(r)).join("");
+        const mojitosEspeciales = [9, 10, 12, 25].map(id => RECETAS.find(r => r.id === id)).filter(Boolean);
+    const mojitosSabores    = [15, 11, 14, 13, 16].map(id => RECETAS.find(r => r.id === id)).filter(Boolean);
+    const mojitosHTML = [
+      mojitosEspeciales.map(r => cardHTML(r)).join(""),
+      mojitosSabores.length ? '<div class="sub-divider"><span class="sub-tag">sabores</span><span class="sub-line"></span></div>' : '',
+      mojitosSabores.map(r => cardHTML(r)).join("")
+    ].join("");
+    document.getElementById("grid-mojitos").innerHTML = mojitosHTML;
     document.getElementById("grid-coladas").innerHTML = coladas.map(r => cardHTML(r)).join("");
     document.getElementById("grid-daikiris").innerHTML = daikiris.map(r => cardHTML(r)).join("");
     document.getElementById("grid-sours").innerHTML = sours.map(r => cardHTML(r)).join("");
     const elCero = document.getElementById("grid-cero");
     if (elCero) elCero.innerHTML = cero.map(r => cardHTML(r)).join("");
   }
-
-  // ===== UPLOAD FLOW =====
-  let currentUploadId = null;
-  const modal = document.getElementById("modal");
-  const modalTarget = document.getElementById("modal-target");
-  const fileInput = document.getElementById("fileInput");
-
-  function openUpload(id) {
-    const r = RECETAS.find(x => x.id === id);
-    if (!r) return;
-    currentUploadId = id;
-    modalTarget.textContent = `→ ${r.nombre.toUpperCase()}`;
-    modal.classList.add("active");
-  }
-  function closeUpload() {
-    modal.classList.remove("active");
-    currentUploadId = null;
-    fileInput.value = "";
-  }
-
-  document.body.addEventListener("click", (e) => {
-    const removeBtn = e.target.closest("[data-remove]");
-    if (removeBtn) {
-      e.stopPropagation();
-      const id = parseInt(removeBtn.dataset.remove, 10);
-      delete photos[id];
-      savePhotos(photos);
-      render();
-      showToast("FOTO REMOVIDA");
-      return;
-    }
-    const upload = e.target.closest("[data-upload]");
-    if (upload) {
-      const id = parseInt(upload.dataset.upload, 10);
-      openUpload(id);
-    }
-  });
-
-  document.getElementById("cancelBtn").addEventListener("click", closeUpload);
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeUpload();
-  });
-
-  fileInput.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file || currentUploadId == null) return;
-    try {
-      // Redimensionar para no llenar localStorage
-      const dataUrl = await resizeImage(file, 900, 0.82);
-      photos[currentUploadId] = dataUrl;
-      savePhotos(photos);
-      render();
-      showToast("FOTO CARGADA OK");
-      closeUpload();
-    } catch (err) {
-      showToast("ERROR // INTENTA OTRA IMAGEN");
-      console.error(err);
-    }
-  });
-
-  function resizeImage(file, maxW, quality) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const ratio = Math.min(1, maxW / img.width);
-          const w = Math.round(img.width * ratio);
-          const h = Math.round(img.height * ratio);
-          const canvas = document.createElement("canvas");
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL("image/jpeg", quality));
-        };
-        img.onerror = reject;
-        img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // ===== TOAST =====
-  let toastTimer = null;
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = "▶ " + msg;
-    t.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
-  }
-
-  // ===== EXPORT / IMPORT =====
-  document.getElementById("exportBtn").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify(photos, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `the_drink_photos_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("BACKUP EXPORTADO");
-  });
-  document.getElementById("importBtn").addEventListener("click", () => {
-    document.getElementById("importFile").click();
-  });
-  document.getElementById("importFile").addEventListener("change", (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        photos = { ...photos, ...data };
-        savePhotos(photos);
-        render();
-        showToast("BACKUP RESTAURADO");
-      } catch {
-        showToast("ARCHIVO INVÁLIDO");
-      }
-    };
-    reader.readAsText(f);
-  });
 
   
   // ===== SCROLL REVEAL =====
